@@ -1,11 +1,22 @@
 import express from 'express';
 import data from './data.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv'
+
+dotenv.config();
+mongoose.connect(process.env.MONGODB_URI).then(() => {
+  console.log('connected to DB')
+})
+.catch((err) => {
+  console.log(err.message);
+});
 
 const app = express();
 
 app.get('/api/books', (req, res) => {
   res.send(data.books);
 });
+
 
 app.get('/api/books/slug/:slug', (req, res) => {
   const book = data.books.find((x) => x.slug === req.params.slug);

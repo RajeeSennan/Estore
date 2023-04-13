@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import HomeScreen from './screens/HomeScreen';
 import CartScreen from './screens/CartScreen';
 import BookScreeen from './screens/BookScreen';
+import SigninScreen from './screens/SigninScreen';
 import Navbar from 'react-bootstrap/Navbar';
 import Badge from 'react-bootstrap/Badge';
 import Nav from 'react-bootstrap/Nav';
@@ -27,7 +28,7 @@ function App() {
                   Cart
                   {cart.cartItems.length > 0 && (
                     <Badge pill bg="danger">
-                      {cart.cartItems.reduce((a,c) => a + c.quantity, 0)}
+                      {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
                     </Badge>
                   )}
                 </Link>
@@ -39,7 +40,8 @@ function App() {
           <Container className="mt-3">
             <Routes>
               <Route path="/book/:slug" element={<BookScreeen />} />
-              <Route path="/cart" element={<CartScreen  />} />
+              <Route path="/cart" element={<CartScreen />} />
+              <Route path="/signin" element={<SigninScreen />} />
               <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>
