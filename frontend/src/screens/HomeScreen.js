@@ -1,8 +1,12 @@
 import { useEffect, useReducer, useState } from 'react';
-//import data from '../data';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import logger from 'use-reducer-logger';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Book from '../components/Book.js';
+import { Helmet } from 'react-helmet-async';
+import LoadingBox from '../components/LoadingBox.js';
+import MessageBox from '../components/MessageBox.js';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -41,29 +45,23 @@ function HomeScreen() {
 
   return (
     <div>
+      <Helmet>
+        <title>eStore</title>
+      </Helmet>
       <h1>featured Products</h1>
       <div className="books">
         {loading ? (
-          <div>Loading...</div>
+          <LoadingBox />
         ) : error ? (
-          <div>{error}</div>
+         <MessageBox variant='danger'>{error}</MessageBox>
         ) : (
-          books.map((book) => (
-            <div className="book" key={book.id}>
-              <Link to={`/book/${book.id}`}>
-                <img src={book.image} alt={book.name} />
-              </Link>
-              <div className="book-info">
-                <a href={`/book/${book.id}`}>
-                  <p>{book.name}</p>
-                </a>
-                <p>
-                  <strong>${book.price}</strong>
-                </p>
-              </div>
-              <button>Add to cart</button>
-            </div>
-          ))
+          <Row>
+            {books.map((book) => (
+              <Col key={book.slug} sm={6} md={4} lg={3} className="mb-3">
+                <Book book={book}></Book>
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </div>
