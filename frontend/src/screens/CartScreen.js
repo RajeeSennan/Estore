@@ -54,7 +54,7 @@ export default function CartScreen() {
             <ListGroup>
               {cartItems.map((item) => (
                 <ListGroup.Item key={item._id}>
-                  <Row ClassName="align-items-center">
+                  <Row className="align-items-center">
                     <Col md={4}>
                       <img
                         src={item.image}

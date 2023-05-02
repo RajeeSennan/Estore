@@ -5,15 +5,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HelmetProvider } from 'react-helmet-async';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { StoreProvider } from './Store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  //ReactDOM.render(
   <React.StrictMode>
     <StoreProvider>
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
+      <HelmetProvider>
+        <PayPalScriptProvider deferLoading={true}>
+          <App />
+        </PayPalScriptProvider>
+      </HelmetProvider>
     </StoreProvider>
   </React.StrictMode>
 );
