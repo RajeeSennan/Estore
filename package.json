@@ -5,8 +5,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "react-bootstrap": "^2.7.2",
-    "use-reducer-logger": "^1.0.2"
+    "react-bootstrap": "^2.7.2"
   },
   "name": "estore",
   "description": "eStore for Books!",
