@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "react-bootstrap": "^2.7.2"
+    "react-bootstrap": "^2.7.2",
+    "use-reducer-logger": "^1.0.2"
   },
   "name": "estore",
   "description": "eStore for Books!",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "build": "cd backend && npm install  && cd ../frontend && npm install && npm run build",
     "start": "node backend/server.js",
