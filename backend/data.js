@@ -19,7 +19,7 @@ const data = {
     {
       // _id: '1',
       name: 'Book 1',
-      category: 'cate 1',
+      category: 'FairyTale',
       image: '/images/book1.jpg',
       author: 'author 1',
       price: 120,
@@ -32,7 +32,7 @@ const data = {
     {
       // _id: '2',
       name: 'Book 2',
-      category: 'cate 2',
+      category: 'FairyTale',
       image: '/images/book2.jpg',
       author: 'author 2',
       price: 145,
@@ -46,7 +46,7 @@ const data = {
     {
       //_id: '3',
       name: 'Book 3',
-      category: 'cate 3',
+      category: 'FairyTale',
       image: '/images/book3.jpg',
       author: 'author3 ',
       price: 100,
@@ -60,7 +60,7 @@ const data = {
     {
       //_id: '4',
       name: 'Book 4',
-      category: 'cate 4',
+      category: 'FairyTale',
       image: '/images/book4.jpg',
       author: 'author 4',
       price: 160,
@@ -73,7 +73,7 @@ const data = {
     {
       // _id: '5',
       name: 'Book 5',
-      category: 'cate 4',
+      category: 'FairyTale',
       image: '/images/book5.jpg',
       author: 'author 5',
       price: 160,
@@ -86,7 +86,7 @@ const data = {
     {
       //_id: '6',
       name: 'Book 6',
-      category: 'cate 6',
+      category: 'Fiction',
       image: '/images/book6.jpg',
       author: 'author 6',
       price: 160,
@@ -99,7 +99,7 @@ const data = {
     {
       //_id: '7',
       name: 'Book 7',
-      category: 'cate 7',
+      category: 'Fiction',
       image: '/images/book7.jpg',
       author: 'author 7',
       price: 160,
@@ -112,7 +112,7 @@ const data = {
     {
       //_id: '8',
       name: 'Book 8',
-      category: 'cate 8',
+      category: 'ScienceFantasy',
       image: '/images/book8.jpg',
       author: 'author 8',
       price: 160,
