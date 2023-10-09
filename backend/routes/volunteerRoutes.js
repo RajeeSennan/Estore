@@ -61,6 +61,33 @@ volunteerRouter.get('/user/:user', async (req, res) => {
   }
 });
 
+volunteerRouter.put(
+  '/profile',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const volunteer = await Volunteer.findById(req.body.volunteerId);
+    if (volunteer) {
+      volunteer.volunteerTime = req.body.volunteerTime || volunteer.volunteerTime;
+      volunteer.volunteerDays = req.body.volunteerDays || volunteer.volunteerDays;
+      
+
+      const updatedProfile = await volunteer.save();
+      const user = await User.findOne({ _id: updatedProfile.user });
+      res.send({
+        _id: updatedProfile._id,
+        volunteerDays: updatedProfile.volunteerDays,
+        volunteerTime: updatedProfile.volunteerTime,
+        isApproved: updatedProfile.isApproved,
+        badgeCount: updatedProfile.badgeCount,
+        user:  updatedProfile.user,
+        token: generateToken(user),
+      });
+    } else {
+      res.status(404).send({ message: 'volunteer not found' });
+    }
+  })
+);
+
 
 volunteerRouter.post(
   '/getById',

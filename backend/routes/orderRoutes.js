@@ -82,6 +82,15 @@ orderRouter.get(
   })
 );
 
+orderRouter.get(
+  '/all',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const orders = await Order.find();
+    res.send(orders);
+  })
+);
+
 
 orderRouter.get(
   '/:id',

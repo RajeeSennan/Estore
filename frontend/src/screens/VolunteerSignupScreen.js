@@ -40,8 +40,8 @@ export default function VolunteerSignupScreen() {
         }
       );      
       ctxDispatch({ type: 'VOLUNTEER_SIGNIN', payload: data });
-      localStorage.setItem('UserInfo', JSON.stringify(data.user));
-      localStorage.setItem('VolunteerInfo', JSON.stringify(data));
+      localStorage.setItem('userInfo', JSON.stringify(data.user));
+      localStorage.setItem('volunteerInfo', JSON.stringify(data));
       navigate(`/volunteer/${data._id}`);
     } catch (err) {
       toast.error(getError(err));
