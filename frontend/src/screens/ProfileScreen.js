@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -6,6 +6,7 @@ import { Store } from '../Store';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
 import axios from 'axios';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 
 const reducer = (state, action) => {
@@ -16,6 +17,13 @@ const reducer = (state, action) => {
         return { ...state, loadingUpdate: false };
       case 'UPDATE_FAIL':
         return { ...state, loadingUpdate: false };
+
+        case 'FETCH_REQUEST':
+          return { ...state, loading: true };
+        case 'FETCH_SUCCESS':
+          return { ...state, volunteerInfo: action.payload, loading: false };
+        case 'FETCH_FAIL':
+          return { ...state, loading: false, error: action.payload };   
   
       default:
         return state;
@@ -29,10 +37,30 @@ const reducer = (state, action) => {
     const [email, setEmail] = useState(userInfo.email);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    const [user, setUser] = useState(userInfo._id);
   
-    const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
+    const [{ loadingUpdate, volunteerInfo }, dispatch] = useReducer(reducer, {
+      volunteerInfo:null,
       loadingUpdate: false,
     });
+
+
+    useEffect(() => {
+      const fetchListener = async () => {
+        try {
+          dispatch({ type: 'FETCH_REQUEST' });
+          const { data } = await axios.get(`/api/volunteers/user/${user}`, {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+          });
+          
+          dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        } catch (err) {         
+          dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+        }
+      };
+      fetchListener()
+  },[user, userInfo]);
   
     const submitHandler = async (e) => {
       e.preventDefault();
@@ -100,9 +128,17 @@ const reducer = (state, action) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </Form.Group>
-          <div className="mb-3">
+          {volunteerInfo ? (
+            <div className="mb-3">
+            <Button type="submit">Update</Button>  
+            <p></p>          
+                Update volunteer info? {' '}
+                <Link to={"/volunteerprofile" }> Go to Volunteer profile</Link>
+                </div>
+            ):(<div className="mb-3">
             <Button type="submit">Update</Button>
-          </div>
+            </div>)}         
+
         </form>
       </div>
     );

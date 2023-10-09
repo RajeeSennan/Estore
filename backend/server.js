@@ -6,6 +6,8 @@ import seedRouter from './routes/seedRoutes.js';
 import bookRouter from './routes/bookRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
+import listenerRouter from './routes/listenerRoutes.js';
+import volunteerRouter from './routes/volunteerRoutes.js';
 
 dotenv.config();
 mongoose
@@ -30,6 +32,8 @@ app.use('/api/seed', seedRouter);
 app.use('/api/books', bookRouter);
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/listeners', listenerRouter);
+app.use('/api/volunteers', volunteerRouter)
 
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, '/frontend/build')));

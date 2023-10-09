@@ -19,6 +19,25 @@ export const generateToken = (user) => {
   );
 };
 
+export const generateServiceToken = (user) => {
+  // return jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
+  // expiresIn: '30d',
+  //});
+
+  return jwt.sign(
+    {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+     
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '30d',
+    }
+  );
+};
+
 export const isAuth = (req, res, next) => {
   const authorization = req.headers.authorization;
   if (authorization) {
@@ -43,3 +62,4 @@ export const isAdmin = (req, res, next) => {
     res.status(401).send({ message: 'Invalid Admin Token' });
   }
 };
+

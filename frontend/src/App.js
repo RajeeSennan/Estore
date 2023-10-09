@@ -27,11 +27,17 @@ import BookListScreen from './screens/BookListScreen';
 import BookEditScreen from './screens/BookEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import UserListScreen from './screens/UserListScreen';
+import ServiceScreen from './screens/ServiceScreen';
 import AdminRoute from './components/AdminRoute';
 import Button from 'react-bootstrap/Button';
 import { getError } from './utils';
 import axios from 'axios';
 import SearchBox from './components/SearchBox';
+import ListenerSignupScreen from './screens/ListenerSignupScreen';
+import ListenerScreen from './screens/ListenerScreen';
+import VolunteerSignupScreen from './screens/VolunteerSignupScreen';
+import VolunteerScreen from './screens/VolunteerScreen';
+import VolunteerProfile from './screens/VolunteerProfile';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -42,6 +48,7 @@ function App() {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentMethod');
+    localStorage.removeItem('volunteerInfo');
     window.location.href = '/signin';
   };
 
@@ -92,6 +99,9 @@ function App() {
                         {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
                       </Badge>
                     )}
+                  </Link>
+                  <Link to="/service" className="nav-link">
+                    Service
                   </Link>
                   {userInfo ? (
                     <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
@@ -171,6 +181,18 @@ function App() {
               <Route path="/search" element={<SearchScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
               <Route path="/signup" element={<SignupScreen />} />
+              <Route path="/service" element={<ServiceScreen />} />
+              <Route path="/listener/:id" element={<ListenerScreen />} />
+              <Route path="/volunteer/:id" element={<VolunteerScreen />} />
+              <Route
+                path="/listenersignup"
+                element={<ListenerSignupScreen />}
+              />
+              <Route
+                path="/volunteersignup"
+                element={<VolunteerSignupScreen />}
+              />
+              <Route path="/volunteer" element={<VolunteerScreen />} />
               <Route
                 path="/profile"
                 element={
@@ -179,6 +201,15 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/volunteerprofile"
+                element={
+                  <ProtectedRoute>
+                    <VolunteerProfile />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route path="/placeorder" element={<PlaceOrderScreen />} />
               <Route
                 path="/order/:id"
