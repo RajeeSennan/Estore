@@ -60,7 +60,7 @@ export default function ProfileScreen() {
       }
     };
     fetchListener();
-  }, [user, userInfo]);
+  }, [user, userInfo, dispatch, ctxDispatch]);
 
   const submitHandler = async (e) => {
     e.preventDefault();

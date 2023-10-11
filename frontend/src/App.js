@@ -38,6 +38,9 @@ import ListenerScreen from './screens/ListenerScreen';
 import VolunteerSignupScreen from './screens/VolunteerSignupScreen';
 import VolunteerScreen from './screens/VolunteerScreen';
 import VolunteerProfile from './screens/VolunteerProfile';
+import EditUserScreen from './screens/EditUserScreen';
+import VolunteerListScreen from './screens/VolunteerListScreen';
+import ListenerListScreen from './screens/ListenerListScreen';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -138,6 +141,12 @@ function App() {
                       </LinkContainer>
                       <LinkContainer to="/admin/users">
                         <NavDropdown.Item>Users</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/volunteers">
+                        <NavDropdown.Item>Volunteers</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/listeners">
+                        <NavDropdown.Item>Listeners</NavDropdown.Item>
                       </LinkContainer>
                     </NavDropdown>
                   )}
@@ -268,6 +277,30 @@ function App() {
                 element={
                   <AdminRoute>
                     <BookEditScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+               <Route
+                path="/admin/volunteers"
+                element={
+                  <AdminRoute>
+                    <VolunteerListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+               <Route
+                path="/admin/listeners"
+                element={
+                  <AdminRoute>
+                    <ListenerListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+               <Route
+                path="/admin/editUser/:userId"
+                element={
+                  <AdminRoute>
+                    <EditUserScreen />
                   </AdminRoute>
                 }
               ></Route>

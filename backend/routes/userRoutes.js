@@ -1,14 +1,49 @@
-import { isAuth, generateToken } from '../utils.js';
+import { isAuth, generateToken, isAdmin } from '../utils.js';
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import bcrypt from 'bcryptjs';
 import User from '../models/UserModel.js';
+import Volunteer from '../models/VolunteerModel.js';
+
 
 const userRouter = express.Router();
 
 userRouter.get('/', async (req, res) => {
   const user = await User.find();
   res.send(user);
+});
+
+userRouter.get('/onlyUsers', async (req, res) => {
+  const users = await User.find({ isAdmin: false });
+
+  const volunteerUsers = [];
+  if (users.length > 0) {
+    for (var user in users) {
+      const volunteer = await Volunteer.findOne({ user: users[user].id });
+      if (volunteer) {
+        console.log(users[user].name);
+        const vu = new Object();
+        vu.userId = users[user].id;
+        vu.name = users[user].name;
+        vu.email = users[user].email;       
+        vu.isApproved = users[user].isApproved;
+        vu.volunteerDays = volunteer.volunteerDays;
+        vu.volunteerTime = volunteer.volunteerTime;
+        vu.badgeCount = volunteer.badgeCount;
+        vu.volunteerId = volunteer._id;
+        volunteerUsers.push(vu);
+      } else {
+        console.log(users[user].name);
+        const vu = new Object();
+        vu.userId = users[user].id;
+        vu.name = users[user].name;
+        vu.email = users[user].email;
+        vu.volunteerId = 'NULL';
+        volunteerUsers.push(vu);
+      }
+    }
+  }
+  res.send(volunteerUsers);
 });
 
 userRouter.post(
@@ -18,7 +53,7 @@ userRouter.post(
     const user = await User.findOne({ email: req.body.email });
     if (user) {
       console.log('user exist');
-      if (bcrypt.compareSync( req.body.password, user.password)) {
+      if (bcrypt.compareSync(req.body.password, user.password)) {
         res.send({
           _id: user._id,
           name: user.name,
@@ -38,9 +73,9 @@ userRouter.post(
   '/signup',
   expressAsyncHandler(async (req, res) => {
     const newUser = new User({
-name: req.body.name,
-email:req.body.email,
-password: bcrypt.hashSync(req.body.password),
+      name: req.body.name,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password),
     });
     const user = await newUser.save();
     res.send({

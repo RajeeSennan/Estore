@@ -7,7 +7,7 @@ const volunteerSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    isApproved: { type: Boolean, default: false, required: true },
+    isApproved: { type: Number, default: 0, required: true },
     volunteerDays: { type: String, required: true },
     volunteerTime: { type: String, required: true },
     BadgeCount: { type: Number },

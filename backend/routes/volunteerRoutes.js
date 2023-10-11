@@ -15,9 +15,35 @@ volunteerRouter.get('/', async (req, res) => {
   res.send(volunteer);
 });
 
-volunteerRouter.get('/delete', async(req, res) => {
+volunteerRouter.get('/all', async (req, res) => {
+  const volunteers = await Volunteer.find();
+
+  const volunteerUsers = [];
+
+  if (volunteers.length > 0) {
+    for (var index in volunteers) {
+      const user = await User.findOne({ _id: volunteers[index].user });
+
+      console.log(user.name);
+      const vu = new Object();
+      vu.userId = user._id;
+      vu.name = user.name;
+      vu.email = user.email;
+      vu.isApproved = volunteers[index].isApproved;
+      vu.volunteerDays = volunteers[index].volunteerDays;
+      vu.volunteerTime = volunteers[index].volunteerTime;
+      vu.badgeCount = volunteers[index].badgeCount;
+      vu.volunteerId = volunteers[index]._id;
+      volunteerUsers.push(vu);
+    }
+  }
+
+  res.send(volunteerUsers);
+});
+
+volunteerRouter.get('/delete', async (req, res) => {
   await Volunteer.deleteMany({});
-  console.log("the volunteer are deleted!")
+  console.log('the volunteer are deleted!');
 });
 
 volunteerRouter.get('/:id', async (req, res) => {
@@ -43,11 +69,11 @@ volunteerRouter.get('/:id', async (req, res) => {
 });
 
 volunteerRouter.get('/user/:user', async (req, res) => {
-  const volunteer = await Volunteer.findOne({user: req.params.user});
+  const volunteer = await Volunteer.findOne({ user: req.params.user });
   if (volunteer) {
-   const user = await User.findOne({ _id: volunteer.user });
+    const user = await User.findOne({ _id: volunteer.user });
     res.send({
-      _id: volunteer._id,     
+      _id: volunteer._id,
       user: volunteer.user,
       isApproved: volunteer.isApproved,
       volunteerDays: volunteer.volunteerDays,
@@ -67,9 +93,10 @@ volunteerRouter.put(
   expressAsyncHandler(async (req, res) => {
     const volunteer = await Volunteer.findById(req.body.volunteerId);
     if (volunteer) {
-      volunteer.volunteerTime = req.body.volunteerTime || volunteer.volunteerTime;
-      volunteer.volunteerDays = req.body.volunteerDays || volunteer.volunteerDays;
-      
+      volunteer.volunteerTime =
+        req.body.volunteerTime || volunteer.volunteerTime;
+      volunteer.volunteerDays =
+        req.body.volunteerDays || volunteer.volunteerDays;
 
       const updatedProfile = await volunteer.save();
       const user = await User.findOne({ _id: updatedProfile.user });
@@ -79,7 +106,7 @@ volunteerRouter.put(
         volunteerTime: updatedProfile.volunteerTime,
         isApproved: updatedProfile.isApproved,
         badgeCount: updatedProfile.badgeCount,
-        user:  updatedProfile.user,
+        user: updatedProfile.user,
         token: generateToken(user),
       });
     } else {
@@ -88,6 +115,30 @@ volunteerRouter.put(
   })
 );
 
+volunteerRouter.put(
+  '/approve',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const volunteer = await Volunteer.findById(req.body.id);
+    if (volunteer) {
+      volunteer.isApproved = req.body.value || volunteer.isApproved;
+
+      const updatedProfile = await volunteer.save();
+      const user = await User.findOne({ _id: updatedProfile.user });
+      res.send({
+        _id: updatedProfile._id,
+        volunteerDays: updatedProfile.volunteerDays,
+        volunteerTime: updatedProfile.volunteerTime,
+        isApproved: updatedProfile.isApproved,
+        badgeCount: updatedProfile.badgeCount,
+        user: updatedProfile.user,
+        token: generateToken(user),
+      });
+    } else {
+      res.status(404).send({ message: 'volunteer not found' });
+    }
+  })
+);
 
 volunteerRouter.post(
   '/getById',
@@ -108,7 +159,7 @@ volunteerRouter.post(
         token: generateToken(volunteer.user),
       });
       return;
-    }   
+    }
     res.status(401).send({ message: 'Invalid email or password' });
   })
 );
@@ -137,7 +188,6 @@ volunteerRouter.post(
       badgeCount: volunteer.badgeCount,
       token: generateToken(user),
     });
-    
   })
 );
 

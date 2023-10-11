@@ -1,19 +1,20 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
-import Button from 'react-bootstrap/esm/Button';
+import Approval from '../components/Approval';
+import ApprovalButton from '../components/ApprovalButton';
+import  Button from 'react-bootstrap/Button';
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
-      return { ...state,  loading: false };
+      return { ...state, volunteerUserInfo: action.payload, loading: false };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     default:
@@ -21,27 +22,25 @@ const reducer = (state, action) => {
   }
 };
 
-export default function UserListScreen() {
-  const { state, dispatch: ctxDispatch} = useContext(Store);
-  const { userInfo  } = state;
-  const {volunteerUserInfo} = state;
-  const navigate = useNavigate();
+export default function VolunteerListScreen() {
+  const { state } = useContext(Store);
+  const { userInfo } = state;
 
-  const [{ loading, error}, dispatch] = useReducer(reducer, {
-    loading: false,
-    error: '',
-  });
+  const [{ loading, error, volunteerUserInfo }, dispatch] = useReducer(
+    reducer,
+    {
+      loading: false,
+      error: '',
+      volunteerUserInfo: [],
+    }
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const { data } = await axios.get(`/api/users/onlyUsers`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-
+        const { data } = await axios.get(`/api/volunteers/all`);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
-        ctxDispatch({ type: 'VOLUNTEERUSER_FETCH', payload: data });
         localStorage.setItem('volunteerUserInfo', JSON.stringify(data));
       } catch (error) {
         dispatch({
@@ -52,16 +51,14 @@ export default function UserListScreen() {
     };
 
     fetchData();
-  }, [userInfo, dispatch, ctxDispatch]);
-
-  
+  }, []);
 
   return (
     <div>
       <Helmet>
-        <title>Users</title>
+        <title>Volunteers</title>
       </Helmet>
-      <h1>Users</h1>
+      <h1>Volunteers</h1>
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
@@ -72,26 +69,25 @@ export default function UserListScreen() {
             <tr>
               <th>NAME</th>
               <th>EMAIL</th>
-              <th>IS VOLUNTEER?</th>             
+              <th>VOLUNTEER DAYS</th>
+              <th>VOLUNTEER TIME</th>
+              <th>APPROVAL STATUS</th>
+              <th>ACTIONS</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            {volunteerUserInfo.map((user) => (
-              <tr key={user.userId}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.volunteerId === 'NULL' ? 'NO' : 'YES'} </td>
-               
-
-                {/* <td>
-                  <Button
-                    type="button"
-                    variant="light"
-                    onClick={() => navigate(`/admin/editUser/${user.userId}`)}
-                  >
-                    View
-                  </Button>
-                </td> */}
+            {volunteerUserInfo.map((volunteer) => (
+              <tr key={volunteer.volunteerId}>
+                <td>{volunteer.name}</td>
+                <td>{volunteer.email}</td>
+                <td>{volunteer.volunteerDays} </td>
+                <td>{volunteer.volunteerTime}</td>
+                {<Approval isApproved={volunteer.isApproved} />}
+                {<ApprovalButton isApproved={volunteer.isApproved} id={volunteer.volunteerId} />}
+                {volunteer.isApproved === 1?( <td> <Button type="button" variant="light">Add Listener(s)</Button></td>)
+                :(
+                <td>&nbsp;</td>)}
               </tr>
             ))}
           </tbody>
