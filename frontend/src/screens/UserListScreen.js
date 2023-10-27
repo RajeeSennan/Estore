@@ -43,6 +43,7 @@ export default function UserListScreen() {
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
         ctxDispatch({ type: 'VOLUNTEERUSER_FETCH', payload: data });
         localStorage.setItem('volunteerUserInfo', JSON.stringify(data));
+        console.log(volunteerUserInfo)
       } catch (error) {
         dispatch({
           type: 'FETCH_FAIL',

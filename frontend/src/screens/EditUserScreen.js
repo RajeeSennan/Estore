@@ -10,7 +10,7 @@ export default function EditUserScreen() {
     const params = useParams();
     const { id: userId } = params;
     const {state, dispatch:ctxDispatch } = useContext(Store);
-    const {volunteerUserInfo} = state;
+   
    
 
     const submitHandler = () => {
@@ -22,19 +22,7 @@ export default function EditUserScreen() {
           <title>Edit User</title>
         </Helmet>
         <h1 className="my-3">Edit User</h1>
-        <form onSubmit={submitHandler}>
-          <Form.Group className="mb-3" controlId="name">
-            <Form.Label>Name</Form.Label>
-           
-
-           <Form.Label>Email</Form.Label>
-           <Form.Label>{volunteerUserInfo.email}</Form.Label> 
-
-           <Form.Label>Approved Volunteer ?</Form.Label>
-           </Form.Group>           
-            
-          
-          </form>
+        
       
     </div>
   )

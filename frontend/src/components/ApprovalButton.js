@@ -22,16 +22,41 @@ export default function ApprovalButton(props) {
   const isApproved = props.isApproved;
   const id = props.id;
 
-  const { state } = useContext(Store);
+  //const { state } = useContext(Store);
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  //const {volunteerList} = state;
   const { userInfo } = state;
 
   const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
     loadingUpdate: false,
   });
 
-  const submitHandler = async (value) => {
-    // e.preventDefault();
+  const GetVolunteers = async () => {
+    dispatch({ type: 'FETCH_REQUEST' });
     try {
+      const { volunteerData } = await axios.get(`/api/volunteers/all`);
+      if (volunteerData !== undefined) {
+        ctxDispatch({ type: 'VOLUNTEERLIST_FETCH', payload: volunteerData });
+
+        localStorage.setItem('volunteerList', JSON.stringify(volunteerData));
+        dispatch({ type: 'UPDATE_SUCCESS' });
+        console.log('volunteerData: ' + volunteerData);
+        console.log(localStorage.getItem('volunteerList'));
+      }
+      console.log('volunteerData is undefined');
+      console.log('volunteerData is not showing');
+      console.log('volunteerData: ' + volunteerData[0].name);
+    } catch (err) {
+      dispatch({
+        type: 'UPDATE_FAIL',
+      });
+    }
+  };
+
+  const submitHandler = async (value) => {
+    //e.preventDefault();
+    try {
+      
       const { data } = await axios.put(
         '/api/volunteers/approve',
         {
@@ -42,15 +67,11 @@ export default function ApprovalButton(props) {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         }
       );
-      dispatch({
-        type: 'UPDATE_SUCCESS',
-      });
-
+      ctxDispatch({ type: 'VOLUNTEERLIST_FETCH', payload: data });     
+      dispatch({ type: 'UPDATE_SUCCESS' }); 
       toast.success('Volunteer updated successfully');
     } catch (err) {
-      dispatch({
-        type: 'UPDATE_FAIL',
-      });
+      dispatch({ type: 'UPDATE_FAIL', });
       toast.error(getError(err));
     }
   };

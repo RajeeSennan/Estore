@@ -29,9 +29,14 @@ const initialState = {
     ? JSON.parse(localStorage.getItem('volunteerInfo'))
     : {},
 
-    volunteerUserInfo: localStorage.getItem('volunteerUserInfo')
-    ? JSON.parse(localStorage.getItem('volunteerUserInfo'))
-    : {},
+ 
+
+  // volunteerList: localStorage.getItem('volunteerList')
+  //   ? JSON.parse(localStorage.getItem('volunteerList'))
+  //   : null,
+  volunteerUserInfo: [],
+  volunteerList :[]
+   
 };
 
 function reducer(state, action) {
@@ -66,7 +71,9 @@ function reducer(state, action) {
         ...state,
         userInfo: null,
         volunteerInfo: null,
-        volunteerUserInfo: null,
+        volunteerUserInfo: null,  
+        volunteerList:null,   
+        listenerList:null,  
         cart: {
           cartItems: [],
           shippingAddress: {},
@@ -93,8 +100,12 @@ function reducer(state, action) {
       return { ...state, linstenerInfo: action.payload };
     case 'VOLUNTEER_SIGNIN':
       return { ...state, volunteerInfo: action.payload };
-    case 'VOLUNTEERUSER_FETCH':
-      return { ...state, volunteerUserInfo: action.payload };
+    case 'VOLUNTEERUSER_FETCH':      
+      return { ...state, volunteerUserInfo: action.payload };  
+    case 'VOLUNTEERLIST_FETCH':      
+      return { ...state, volunteerList: action.payload };  
+    case 'LISTENERLIST_FETCH':      
+      return { ...state, listenerList: action.payload };     
 
     default:
       return state;

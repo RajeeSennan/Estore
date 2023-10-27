@@ -7,6 +7,30 @@ import User from '../models/UserModel.js';
 
 const volunteerRouter = express.Router();
 
+function GetVolunteerList ()
+{
+  const volunteers =  Volunteer.find();
+  const volunteerUsers = [];
+  if (volunteers.length > 0) {
+    for (var index in volunteers) {
+      const user =  User.findOne({ _id: volunteers[index].user });
+
+      console.log(user.name);
+      const vu = new Object();
+      vu.userId = user._id;
+      vu.name = user.name;
+      vu.email = user.email;
+      vu.isApproved = volunteers[index].isApproved;
+      vu.volunteerDays = volunteers[index].volunteerDays;
+      vu.volunteerTime = volunteers[index].volunteerTime;
+      vu.badgeCount = volunteers[index].badgeCount;
+      vu.volunteerId = volunteers[index]._id;
+      volunteerUsers.push(vu);
+    }
+  }
+  return volunteerUsers;
+}
+
 volunteerRouter.get('/', async (req, res) => {
   const volunteer = await Volunteer.find();
   // for( const item of volunteer){
@@ -39,6 +63,8 @@ volunteerRouter.get('/all', async (req, res) => {
   }
 
   res.send(volunteerUsers);
+  //res.send(GetVolunteerList());
+
 });
 
 volunteerRouter.get('/delete', async (req, res) => {
@@ -124,16 +150,44 @@ volunteerRouter.put(
       volunteer.isApproved = req.body.value || volunteer.isApproved;
 
       const updatedProfile = await volunteer.save();
-      const user = await User.findOne({ _id: updatedProfile.user });
-      res.send({
-        _id: updatedProfile._id,
-        volunteerDays: updatedProfile.volunteerDays,
-        volunteerTime: updatedProfile.volunteerTime,
-        isApproved: updatedProfile.isApproved,
-        badgeCount: updatedProfile.badgeCount,
-        user: updatedProfile.user,
-        token: generateToken(user),
-      });
+      // const user = await User.findOne({ _id: updatedProfile.user });
+      // res.send({
+      //   _id: updatedProfile._id,
+      //   volunteerDays: updatedProfile.volunteerDays,
+      //   volunteerTime: updatedProfile.volunteerTime,
+      //   isApproved: updatedProfile.isApproved,
+      //   badgeCount: updatedProfile.badgeCount,
+      //   //user: updatedProfile.user,
+      //   name: user.name,
+      //   email: user.email,
+      //   token: generateToken(user),
+      // });
+//****************************************************************************** */
+const volunteers = await Volunteer.find();
+
+  const volunteerUsers = [];
+
+  if (volunteers.length > 0) {
+    for (var index in volunteers) {
+      const user = await User.findOne({ _id: volunteers[index].user });
+
+      console.log(user.name);
+      const vu = new Object();
+      vu.userId = user._id;
+      vu.name = user.name;
+      vu.email = user.email;
+      vu.isApproved = volunteers[index].isApproved;
+      vu.volunteerDays = volunteers[index].volunteerDays;
+      vu.volunteerTime = volunteers[index].volunteerTime;
+      vu.badgeCount = volunteers[index].badgeCount;
+      vu.volunteerId = volunteers[index]._id;
+      volunteerUsers.push(vu);
+    }
+  }
+
+  res.send(volunteerUsers);
+
+      
     } else {
       res.status(404).send({ message: 'volunteer not found' });
     }

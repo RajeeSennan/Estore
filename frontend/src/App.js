@@ -41,6 +41,8 @@ import VolunteerProfile from './screens/VolunteerProfile';
 import EditUserScreen from './screens/EditUserScreen';
 import VolunteerListScreen from './screens/VolunteerListScreen';
 import ListenerListScreen from './screens/ListenerListScreen';
+import ListenerSelectScreen from './screens/ListenerSelectScreen';
+import VolunteerListenerScreen from './screens/VolunteerListenerScreen';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -52,6 +54,8 @@ function App() {
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentMethod');
     localStorage.removeItem('volunteerInfo');
+    // localStorage.removeItem('volunteerUserInfo');
+    // localStorage.removeItem('volunteerList');
     window.location.href = '/signin';
   };
 
@@ -280,7 +284,7 @@ function App() {
                   </AdminRoute>
                 }
               ></Route>
-               <Route
+              <Route
                 path="/admin/volunteers"
                 element={
                   <AdminRoute>
@@ -288,7 +292,7 @@ function App() {
                   </AdminRoute>
                 }
               ></Route>
-               <Route
+              <Route
                 path="/admin/listeners"
                 element={
                   <AdminRoute>
@@ -296,7 +300,24 @@ function App() {
                   </AdminRoute>
                 }
               ></Route>
-               <Route
+
+              <Route
+                path="/admin/listenerSelect/:volunteerId"
+                element={
+                  <AdminRoute>
+                    <ListenerSelectScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/getListener/:volunteerId"
+                element={
+                  <AdminRoute>
+                    <VolunteerListenerScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/editUser/:userId"
                 element={
                   <AdminRoute>
