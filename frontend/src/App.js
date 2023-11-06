@@ -43,6 +43,8 @@ import VolunteerListScreen from './screens/VolunteerListScreen';
 import ListenerListScreen from './screens/ListenerListScreen';
 import ListenerSelectScreen from './screens/ListenerSelectScreen';
 import VolunteerListenerScreen from './screens/VolunteerListenerScreen';
+import EmailScreen from './screens/EmailScreen';
+import VolunteerReportScreen from './screens/VolunteerReportScreen';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -61,6 +63,7 @@ function App() {
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [volunteer, setVolunteer] = useState('');
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -71,7 +74,26 @@ function App() {
       }
     };
     fetchCategories();
-  }, []);
+
+    if (userInfo === null) {
+      return;
+    } else {
+      const fetchVolunteer = async () => {
+        try {
+          const { data } = await axios.get(
+            `/api/volunteers/user/${userInfo._id}`
+          );
+          ctxDispatch({ type: 'VOLUNTEER_SIGNIN', payload: data });
+          localStorage.setItem('volunteerInfo', JSON.stringify(data));
+          setVolunteer(data);
+        } catch (err) {
+          //toast.error(getError(err));
+        }
+      };
+      fetchVolunteer();
+    }
+    //fetchCategories();
+  }, [userInfo,ctxDispatch]);
 
   return (
     <BrowserRouter>
@@ -118,6 +140,13 @@ function App() {
                       <LinkContainer to="/orderhistory">
                         <NavDropdown.Item>Order History </NavDropdown.Item>
                       </LinkContainer>
+                      {volunteer ? (
+                        <LinkContainer to="/volunteerReport">
+                          <NavDropdown.Item>Volunteer Report </NavDropdown.Item>
+                        </LinkContainer>
+                      ) : (
+                        ''
+                      )}
                       <NavDropdown.Divider />
                       <Link
                         className="dropdown-item"
@@ -240,6 +269,14 @@ function App() {
                   </ProtectedRoute>
                 }
               ></Route>
+              <Route
+                path="/volunteerReport"
+                element={
+                  <ProtectedRoute>
+                    <VolunteerReportScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route path="/shipping" element={<ShippingAddressScreen />} />
               <Route path="/payment" element={<PaymentMethodScreen />} />
 
@@ -322,6 +359,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <EditUserScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/email"
+                element={
+                  <AdminRoute>
+                    <EmailScreen />
                   </AdminRoute>
                 }
               ></Route>

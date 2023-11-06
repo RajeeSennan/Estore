@@ -60,25 +60,28 @@ export default function ListenerListScreen() {
     fetchData();
   }, [ctxDispatch]);
 
-  const submitHandler = async (e) => {
+  const submitHandler = async (action, id) => {
     // e.preventDefault();
     //setListenerId(e.target.value);
     try {
-      const listenerId = e.currentTarget.value;
-      //console.log("The Key is :" + value);
-      console.log('The user is :' + userInfo.token);
+      const actionState = action;
+      const listenerId = id;
+
+      console.log("The actionState is :" + actionState);
+      console.log('The id is :' + listenerId);
       const { data } = await axios.put(
-        '/api/listeners/admin',
+        '/api/listeners/admin/state',
         {
+          actionState,
           listenerId,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         }
       );
-      ctxDispatch({ type: 'LISTENERLIST_FETCH', payload: data });
-      dispatch({ type: 'UPDATE_SUCCESS' });
-      toast.success('Added Successfully!');
+      // ctxDispatch({ type: 'LISTENERLIST_FETCH', payload: data });
+      dispatch({ type: 'UPDATE_SUCCESS', payload: data });
+      toast.success('Updated!');
     } catch (err) {
       dispatch({ type: 'UPDATE_FAIL' });
       toast.error(getError(err));
@@ -96,7 +99,7 @@ export default function ListenerListScreen() {
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
-        <table className="table">
+        <table className="table table-bordered">
           <thead>
             <tr>
               <th>NAME</th>
@@ -107,7 +110,7 @@ export default function ListenerListScreen() {
               <th>AVAILABLE DAYS</th>
               <th>AVAILABLE TIME</th>
               <th>COMPLETED READING</th>
-              <th>IS VERIFIED?</th>
+              <th>ACCEPTED?</th>
               <th></th>
             </tr>
           </thead>
@@ -123,16 +126,27 @@ export default function ListenerListScreen() {
                 <td>{listener.listeningDays}</td>
                 <td>{listener.listeningTime}</td>
                 <td>{listener.completedCount}</td>
-                <td>{listener.isVerified.toString()}</td>
+                <td>{listener.isVerified === 1 ? 'YES' : 'NO'}</td>
                 <td>
-                  <Button
-                    type="button"
-                    variant="light"
-                    value={listener._id}
-                    onClick={submitHandler}
-                  >
-                    Accept
-                  </Button>
+                  {listener.isVerified === 0 ? (
+                    <div class="button-container">
+                      <Button
+                        type="button"
+                        variant="light"
+                        onClick={() => submitHandler(1, listener._id)}
+                      >
+                        {' '}
+                        Accept
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="light"
+                        onClick={() => submitHandler(2, listener._id)}
+                      >
+                        Deny
+                      </Button>
+                    </div>
+                  ) : null}
                 </td>
 
                 {/* <td>

@@ -2,12 +2,15 @@ import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import mg from 'mailgun-js';
 import seedRouter from './routes/seedRoutes.js';
 import bookRouter from './routes/bookRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
 import listenerRouter from './routes/listenerRoutes.js';
 import volunteerRouter from './routes/volunteerRoutes.js';
+import emailRouter from './routes/emailRoutes.js';
+import volunteerReportRouter from './routes/VolunteerReportRoutes.js';
 
 dotenv.config();
 mongoose
@@ -18,6 +21,7 @@ mongoose
   .catch((err) => {
     console.log(err.message);
   });
+
 
 const app = express();
 
@@ -34,6 +38,8 @@ app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/listeners', listenerRouter);
 app.use('/api/volunteers', volunteerRouter)
+app.use('/api/email', emailRouter);
+app.use('/api/volunteerReport', volunteerReportRouter);
 
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, '/frontend/build')));

@@ -22,7 +22,11 @@ listenerRouter.get('/', async (req, res) => {
 });
 
 listenerRouter.get('/active', async (req, res) => {
-  const listener = await Listener.find({ isActive: true, volunteer: null });
+  const listener = await Listener.find({
+    isActive: true,
+    isVerified: 1,
+    volunteer: null,
+  });
   res.send(listener);
 });
 
@@ -37,6 +41,17 @@ listenerRouter.get('/:id', async (req, res) => {
 
 listenerRouter.get('/forVolunteer/:volunteerId', async (req, res) => {
   const listener = await Listener.find({ volunteer: req.params.volunteerId });
+  if (listener) {
+    res.send(listener);
+  } else {
+    res.status(404).send({ message: 'Listener Not Found' });
+  }
+});
+
+listenerRouter.get('/forVolunteerOne/:volunteerId', async (req, res) => {
+  const listener = await Listener.findOne({
+    volunteer: req.params.volunteerId,
+  });
   if (listener) {
     res.send(listener);
   } else {
@@ -150,6 +165,37 @@ listenerRouter.put(
           isActive: true,
           volunteer: null,
         });
+        res.send(listener);
+      }
+    } else {
+      res.status(404).send({ message: 'listener not found' });
+    }
+  })
+);
+
+listenerRouter.put(
+  '/admin/state',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const listener = await Listener.findById(req.body.listenerId);
+    const state = req.body.actionState;
+    if (listener) {
+      listener.volunteer = req.body.volunteerId;
+      listener.name = listener.name;
+      listener.age = listener.age;
+      listener.school = listener.school;
+      listener.grade = listener.grade;
+      listener.listeningDays = listener.listeningDays;
+      listener.listeningTime = listener.listeningTime;
+      listener.email = listener.email;
+      listener.isVerified = state;
+      listener.isActive = state === 1 ? true : false;
+
+      const updatedListener = await listener.save();
+
+      if (updatedListener) {
+        const listener = await Listener.find();
         res.send(listener);
       }
     } else {

@@ -79,3 +79,6 @@ main {
 .active-nav {
   left: 0;
 }
+.button-container {
+  display: flex;
+}

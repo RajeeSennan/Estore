@@ -11,6 +11,7 @@ const volunteerSchema = new mongoose.Schema(
     volunteerDays: { type: String, required: true },
     volunteerTime: { type: String, required: true },
     BadgeCount: { type: Number },
+    
   },
   {
     timestamps: true,
