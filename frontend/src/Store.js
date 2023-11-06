@@ -28,12 +28,7 @@ const initialState = {
   volunteerInfo: localStorage.getItem('volunteerInfo')
     ? JSON.parse(localStorage.getItem('volunteerInfo'))
     : {},
-
- 
-
-  // volunteerList: localStorage.getItem('volunteerList')
-  //   ? JSON.parse(localStorage.getItem('volunteerList'))
-  //   : null,
+  
   volunteerUserInfo: [],
   volunteerList :[]
    
