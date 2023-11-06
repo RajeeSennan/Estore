@@ -30,8 +30,8 @@ const initialState = {
     : {},
   
   volunteerUserInfo: [],
-  volunteerList :[]
-   
+  volunteerList :[] 
+    
 };
 
 function reducer(state, action) {
