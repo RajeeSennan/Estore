@@ -97,6 +97,17 @@ export default function VolunteerListScreen() {
                     id={volunteer.volunteerId}
                   />
                 }
+                 <td>
+                    {' '}
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => {
+                        navigate(`/admin/email/${volunteer.email}`);}}
+                    >
+                      email
+                    </Button>
+                  </td>
                 {volunteer.isApproved === 1 ? (
                   <td>
                     {' '}

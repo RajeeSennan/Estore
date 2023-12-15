@@ -56,8 +56,6 @@ function App() {
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentMethod');
     localStorage.removeItem('volunteerInfo');
-    // localStorage.removeItem('volunteerUserInfo');
-    // localStorage.removeItem('volunteerList');
     window.location.href = '/signin';
   };
 
@@ -77,7 +75,7 @@ function App() {
 
     if (userInfo === null) {
       return;
-    } else {
+    } else if (!userInfo.isAdmin) {
       const fetchVolunteer = async () => {
         try {
           const { data } = await axios.get(
@@ -93,7 +91,7 @@ function App() {
       fetchVolunteer();
     }
     //fetchCategories();
-  }, [userInfo,ctxDispatch]);
+  }, [userInfo, ctxDispatch]);
 
   return (
     <BrowserRouter>
@@ -363,7 +361,7 @@ function App() {
                 }
               ></Route>
               <Route
-                path="/admin/email"
+                path="/admin/email/:emailParam"
                 element={
                   <AdminRoute>
                     <EmailScreen />

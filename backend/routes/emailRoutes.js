@@ -6,6 +6,7 @@ import expressAsyncHandler from 'express-async-handler';
 
 const emailRouter = express.Router();
 
+dotenv.config();
 const mailgun = () =>
   mg({
     apiKey: process.env.MAILGUN_API_KEY,
@@ -30,7 +31,7 @@ emailRouter.post('/', async (req, res) => {
             res.status(500).send({message: 'Error in sending email'});
         }else{
             console.log(body);
-            res.send({message: 'Email sent successfully'});
+            res.status(200).send({message: 'Email sent successfully'});
         }
       }
     );

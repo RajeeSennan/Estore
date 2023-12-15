@@ -3,12 +3,13 @@ import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { Store } from '../Store';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError } from '../utils';
+import { useParams } from 'react-router-dom';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -24,10 +25,13 @@ const reducer = (state, action) => {
 };
 
 export default function EmailScreen() {
-  const [email, setEmail] = useState('');
+  const params = useParams();
+  const { emailParam } = params;
+  //const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
+  console.log('The email ' + emailParam);
   const { state } = useContext(Store);
   const { userInfo } = state;
   const [{ loading, error }, dispatch] = useReducer(reducer, {
@@ -36,10 +40,12 @@ export default function EmailScreen() {
   });
 
   const submitHandler = async (e) => {
+    //console.log('The email2 ' + email);
     e.preventDefault();
-    if (!email || !subject || !message) {
+    if (!emailParam || !subject || !message) {
       return toast.error('Please fill email, subject and message');
     }
+    const email = emailParam;
     try {
       dispatch({ type: 'SEND_REQUEST' });
       const { data } = await axios.post(
@@ -67,6 +73,7 @@ export default function EmailScreen() {
   };
   return (
     <div className="container small-container">
+      {/* <ToastContainer position='bottom-center' limit={1}/> */}
       <Helmet>
         <title>Email Notifcation</title>
       </Helmet>
@@ -75,8 +82,8 @@ export default function EmailScreen() {
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailParam}
+            // onChange={(e) => setEmail(e.target.value)}
             required
           />
         </Form.Group>

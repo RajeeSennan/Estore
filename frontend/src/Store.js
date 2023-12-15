@@ -2,7 +2,7 @@ import { createContext, useReducer } from 'react';
 
 export const Store = createContext();
 
-const initialState = {
+const initialState = {  
   userInfo: localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null,
@@ -31,7 +31,7 @@ const initialState = {
   
   volunteerUserInfo: [],
   volunteerList :[] 
-    
+
 };
 
 function reducer(state, action) {
